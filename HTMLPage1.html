@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Cat and Dog</title>
+    <style>
+        #gameArea {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1 id="DogHealth">Dog is green 100</h1>
+        <button id="DogAttack1">Attack1</button>
+        <button id="DogAttack2">Attack2</button>
+    </div>
+    <h1 id="catHealth">Cat is blue 100</h1>
+    <canvas id="gameArea" width="800" height="600"></canvas>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+        $('#DogAttack1').click(function () {
+            moveDog();
+            var CatHealth = dog.Attacking(cat, 25);
+            DogAttacked = true;
+            if (CatHealth == 0) {
+                $("#catHealth").html("Cat is blue 0");
+                alert("Dog!!!!" + "Congratulations!! You are big winner");
+                setTimeout(location.reload.bind(location), 2000);
+            }
+            else {
+                $("#catHealth").html("Cat is blue " + CatHealth);
+                moveCat();
+                var DogHealth = cat.Attacking(dog, 10);
+                CatAttacked = true;
+                if (DogHealth == 0) {
+                    $("#DogHealth").html("Dog is green 0");
+                    alert("Cat!!!!" + "Congratulations!! You are big winner");
+                    setTimeout(location.reload.bind(location), 2000);
+                }
+                else {
+                    $("#DogHealth").html("Dog is green " + DogHealth);
+
+                }
+            }
+        });
+        $('#DogAttack2').click(function () {
+            moveDog();
+            var CatHealth = dog.Attacking(cat, 50);
+            DogAttacked = true;
+            if (CatHealth == 0 || CatHealth < 0) {
+                $("#catHealth").html("Cat is blue 0");
+                alert("Dog!!!!" + "Congratulations!! You are big winner");
+                setTimeout(location.reload.bind(location), 2000);
+            }
+            else {
+                $("#catHealth").html("Cat is blue " + CatHealth);
+                moveCat();
+                var DogHealth = cat.Attacking(dog, 20);
+                CatAttacked = true;
+                if (DogHealth == 0) {
+                    $("#DogHealth").html("Dog is green 0");
+                    alert("Cat!!!!" + "Congratulations!! You are big winner");
+                    setTimeout(location.reload.bind(location), 2000);
+                }
+                else {
+                    $("#DogHealth").html("Dog is green " + DogHealth);
+                    attacked = true;
+                }
+
+            }
+        });
+        function Animal(health, attack1, attack2) {
+            this.Health = 100;
+            this.Attack1 = attack1;
+            this.Attack2 = attack2;
+        }
+        Animal.prototype.Attacking = function (animal, attack) {
+            animal.Health = animal.Health - attack;
+            return animal.Health;
+        }
+        function Dog(attack1, attack2) {
+            Animal.call(this, 50, 100);
+        }
+        function Cat(attack1, attack2) {
+            Animal.call(this, 25, 50);
+        }
+
+        Dog.prototype = new Animal();
+        Dog.prototype.constructor = Dog;
+
+        Cat.prototype = new Animal();
+        Cat.prototype.constructor = Cat;
+
+        var cat = new Cat();
+        var dog = new Dog();
+
+        ///////////////////////////////////////////////////////////
+        // cat variables
+        var catX = 100; // the x position of the cat
+        var catY = 100; // the y position of the cat
+        var catSize = 20; // the radius of the cat is 20 pixels
+
+        // dog variables
+        var dogX = 700; // the x positon of the dog
+        var dogY = 500; // the y position of the dog
+        var dogSize = 20; // the radius of the dog is 20 pixels
+
+        var CatAttacked = false;
+        var DogAttacked = false;
+        // canvas properties
+        // identify the correct canvas
+        var canvas = document.getElementById("gameArea");
+        var ctx = canvas.getContext("2d"); // get the 2D context
+
+        function moveDog() {           
+            // draw dog
+            ctx.fillStyle = "#00FF00"; // dog will be green (hexadecimal colors)
+            ctx.beginPath(); // start a new path
+            ctx.arc(catX + 30, catY, dogSize, 0, 2 * Math.PI); // specify the arc
+            ctx.fill(); // fill the area the circle encloses with green
+        }
+        function moveCat() {
+            // draw cat
+            ctx.fillStyle = "#0000FF"; // cat will be blue (hexadecima colors)
+            ctx.beginPath(); // start a new path
+            ctx.arc(dogX - 10, dogY, catSize, 0, 2 * Math.PI); // specify the arc
+            ctx.fill(); // fill the area the circle encloses with blue
+        }
+
+        function DrawCat(color) {
+            // draw cat
+            ctx.fillStyle = color; // cat will be blue (hexadecima colors)
+            ctx.beginPath(); // start a new path
+            ctx.arc(catX, catY, catSize, 0, 2 * Math.PI); // specify the arc
+            ctx.fill(); // fill the area the circle encloses with blue
+        }
+        function DrawDog(color) {
+            // draw dog
+            ctx.fillStyle = color; // dog will be green (hexadecimal colors)
+            ctx.beginPath(); // start a new path
+            ctx.arc(dogX, dogY, dogSize, 0, 2 * Math.PI); // specify the arc
+            ctx.fill(); // fill the area the circle encloses with green
+        }
+        function draw() {
+            // clear canvas by painting the whole canvas white
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, 800, 600);
+            DrawCat("#0000FF");
+            DrawDog("#00FF00");
+        }
+        function main() {
+            
+            if (CatAttacked == false && DogAttacked == false)
+                draw();
+            else if (CatAttacked == false && DogAttacked == true) {
+                // draw cat
+                DrawCat("#0000FF");
+                // draw dog
+                DrawDog("white");
+                DogAttacked = false;
+            }
+            else
+            {
+                // draw dog
+                DrawDog("#00FF00");
+                // draw cat
+                DrawCat("white");
+                CatAttacked = false;
+            }
+            window.requestAnimationFrame(main);
+        }
+        window.requestAnimationFrame(main);
+    </script>
+</body>
+</html>
